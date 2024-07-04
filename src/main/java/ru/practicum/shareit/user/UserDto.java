@@ -1,18 +1,16 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.item.Item;
-
-import java.util.Set;
 
 @Getter
 @Setter
 @Builder
-public class User {
+public class UserDto {
     private Long id;
     private String name;
+    @Email(message = "Поле email недопустимого формата!")
     private String email;
-    private Set<Item> items;
 }
