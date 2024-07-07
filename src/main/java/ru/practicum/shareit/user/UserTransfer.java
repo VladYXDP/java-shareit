@@ -10,6 +10,13 @@ public class UserTransfer {
 
     private ItemTransfer itemTransfer;
 
+    public User toUserCreate(UserDto dto) {
+        return User.builder()
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .build();
+    }
+
     public User toUser(UserDto dto) {
         return User.builder()
                 .id(dto.getId())
@@ -25,23 +32,6 @@ public class UserTransfer {
                 .email(user.getEmail())
                 .build();
     }
-
-    public UserEntityDto toDtoEntity(UserEntity user) {
-        return UserEntityDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .build();
-    }
-
-    public UserEntity toEntity(UserEntityDto dtoEntity) {
-        return UserEntity.builder()
-                .id(dtoEntity.getId())
-                .name(dtoEntity.getName())
-                .email(dtoEntity.getEmail())
-                .build();
-    }
-
 
     @Autowired
     @Lazy

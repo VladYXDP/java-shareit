@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class UserDto {
+
     private Long id;
     private String name;
     @Email(message = "Поле email недопустимого формата!")

@@ -12,43 +12,23 @@ public class ItemTransfer {
 
     private final UserTransfer userTransfer;
 
-    public Item toItem(ItemDto dto) {
-        return Item.builder()
-                .id(dto.getId())
-                .name(dto.getName())
-                .desc(dto.getDescription())
-                .owner(dto.getOwner())
-                .available(dto.getAvailable())
-                .build();
-    }
-
-    public ItemDto toDto(Item dto) {
+    public ItemDto toDto(Item entity) {
         return ItemDto.builder()
-                .id(dto.getId())
-                .name(dto.getName())
-                .description(dto.getDesc())
-                .owner(dto.getOwner())
-                .available(dto.getAvailable())
-                .build();
-    }
-
-    public ItemDtoEntity toDto(ItemEntity entity) {
-        return ItemDtoEntity.builder()
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
-                .owner(userTransfer.toDtoEntity(entity.getOwner()))
+                .owner(userTransfer.toDto(entity.getOwner()))
                 .available(entity.getAvailable())
                 .build();
     }
 
-    public ItemEntity toEntity(ItemDtoEntity entityDto) {
-        return ItemEntity.builder()
+    public Item toEntity(ItemDto entityDto) {
+        return Item.builder()
                 .id(entityDto.getId())
                 .name(entityDto.getName())
                 .description(entityDto.getDescription())
                 .available(entityDto.getAvailable())
-                .owner(userTransfer.toEntity(entityDto.getOwner()))
+                .owner(userTransfer.toUser(entityDto.getOwner()))
                 .build();
     }
 }

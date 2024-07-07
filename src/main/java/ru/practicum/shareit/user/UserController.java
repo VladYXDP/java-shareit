@@ -26,7 +26,7 @@ public class UserController {
         if (dto.getEmail() == null) {
             throw new ValidationException("Поле email обязательно для заполнения!");
         }
-        User user = userService.add(userTransfer.toUser(dto));
+        User user = userService.add(userTransfer.toUserCreate(dto));
         return userTransfer.toDto(user);
     }
 
@@ -37,7 +37,7 @@ public class UserController {
         return userTransfer.toDto(userService.update(userTransfer.toUser(userDto)));
     }
 
-    @GetMapping("/{userId}")
+ /*   @GetMapping("/{userId}")
     public UserDto get(@Positive @PathVariable Long userId) {
         return userTransfer.toDto(userService.get(userId));
     }
@@ -52,5 +52,5 @@ public class UserController {
         return userService.getAll().stream()
                 .map(userTransfer::toDto)
                 .collect(Collectors.toList());
-    }
+    }*/
 }

@@ -1,18 +1,29 @@
 package ru.practicum.shareit.user;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 import ru.practicum.shareit.item.Item;
 
 import java.util.Set;
 
+@Entity
+@Table(name = "users")
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column
     private String name;
+
+    @Column
     private String email;
+
+    @OneToMany(mappedBy = "owner")
     private Set<Item> items;
 }

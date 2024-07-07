@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ItemController {
 
-    private final ItemService itemService;
+//    private final ItemService itemService;
     private final ItemTransfer itemTransfer;
 
-    @Valid
+/*    @Valid
     @PostMapping
     public ItemDto add(@Positive @RequestHeader(value = "X-Sharer-User-Id") Long userId,
                        @RequestBody ItemDto dto) {
@@ -67,5 +67,5 @@ public class ItemController {
         return itemService.search(text).stream()
                 .map(itemTransfer::toDto)
                 .collect(Collectors.toList());
-    }
+    }*/
 }
