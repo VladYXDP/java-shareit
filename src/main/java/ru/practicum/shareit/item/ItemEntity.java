@@ -1,21 +1,17 @@
 package ru.practicum.shareit.item;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.shareit.user.UserEntity;
 
 @Entity
-@Table(name = "item")
+@Table(name = "items")
 @Setter
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ItemEntity {
-
-    public ItemEntity() {
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -27,7 +23,6 @@ public class ItemEntity {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
     private UserEntity owner;
 
     @Column

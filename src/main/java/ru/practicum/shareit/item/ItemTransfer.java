@@ -1,10 +1,12 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.user.UserTransfer;
 
 @Component
+@Primary
 @RequiredArgsConstructor
 public class ItemTransfer {
 

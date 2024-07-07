@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.ItemTransfer;
 
@@ -41,7 +42,9 @@ public class UserTransfer {
                 .build();
     }
 
+
     @Autowired
+    @Lazy
     public void setItemTransfer(ItemTransfer itemTransfer) {
         this.itemTransfer = itemTransfer;
     }
