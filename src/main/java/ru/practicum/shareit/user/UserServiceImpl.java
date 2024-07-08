@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
         if (user.getEmail() == null) {
             user.setEmail(currentUser.getEmail());
         } else {
-            if (usersRepository.existsByEmail(user.getEmail()) && user.getEmail().equals(currentUser.getEmail())) {
+            if (usersRepository.existsByEmail(user.getEmail()) && !user.getEmail().equals(currentUser.getEmail())) {
                 throw new AlreadyExistException("Ошибка обновления пользователя с email " + user.getEmail());
             }
         }
@@ -35,8 +35,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User get() {
-        return null;
+    public User get(Long userId) {
+        return usersRepository.getUserById(userId);
     }
 
     @Override

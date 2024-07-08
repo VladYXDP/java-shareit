@@ -37,20 +37,20 @@ public class UserController {
         return userTransfer.toDto(userService.update(userTransfer.toUser(userDto)));
     }
 
- /*   @GetMapping("/{userId}")
+    @GetMapping("/{userId}")
     public UserDto get(@Positive @PathVariable Long userId) {
         return userTransfer.toDto(userService.get(userId));
     }
 
-    @DeleteMapping("/{userId}")
-    public UserDto delete(@Positive @PathVariable Long userId) {
-        return userTransfer.toDto(userService.delete(userId));
-    }
-
-    @GetMapping
-    public List<UserDto> getAll() {
-        return userService.getAll().stream()
-                .map(userTransfer::toDto)
-                .collect(Collectors.toList());
-    }*/
+//    @DeleteMapping("/{userId}")
+//    public UserDto delete(@Positive @PathVariable Long userId) {
+//        return userTransfer.toDto(userService.delete(userId));
+//    }
+//
+//    @GetMapping
+//    public List<UserDto> getAll() {
+//        return userService.getAll().stream()
+//                .map(userTransfer::toDto)
+//                .collect(Collectors.toList());
+//    }
 }

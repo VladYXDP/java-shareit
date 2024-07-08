@@ -6,7 +6,7 @@ public interface UserService {
 
     User update(User user);
 
-    User get();
+    User get(Long userId);
 
     User delete();
 }
