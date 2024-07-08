@@ -1,5 +1,7 @@
 package ru.practicum.shareit.user;
 
+import java.util.List;
+
 public interface UserService {
 
     User add(User user);
@@ -8,5 +10,7 @@ public interface UserService {
 
     User get(Long userId);
 
-    User delete();
+    void delete(Long userId);
+
+    List<User> getAll();
 }

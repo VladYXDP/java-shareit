@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS items
     item_name   VARCHAR(100)                            NOT NULL,
     description VARCHAR(100),
     owner_id    BIGINT                                  NOT NULL,
-    request_id BIGINT,
+    request_id  BIGINT,
     is_available   BOOLEAN                              NOT NULL,
     CONSTRAINT pk_items PRIMARY KEY (id)
 );
