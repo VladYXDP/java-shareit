@@ -47,7 +47,7 @@ public class UserController {
 
     @GetMapping
     public List<UserDto> getAll() {
-        return userService.getAll().stream()
+        return userService.findAll().stream()
                 .map(userTransfer::toDto)
                 .collect(Collectors.toList());
     }
