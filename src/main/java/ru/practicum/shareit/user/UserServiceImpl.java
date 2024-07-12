@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.AlreadyExistException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,12 +20,13 @@ public class UserServiceImpl implements UserService {
 //        if (usersRepository.existsByEmail(user.getEmail())) {
 //            throw new AlreadyExistException("Ошибка создания пользователя с email " + user.getEmail());
 //        }
+        User savedUser = null;
         try {
-            User user1 = usersRepository.save(user);
+            savedUser = usersRepository.save(user);
         } catch (Exception e) {
             System.out.println(e);
         }
-        return usersRepository.save(user);
+        return savedUser;
     }
 
     @Override
@@ -59,6 +61,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        return usersRepository.findAll();
+        return new ArrayList<>(); //usersRepository.findAll();
     }
 }
