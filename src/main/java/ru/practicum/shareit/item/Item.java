@@ -22,8 +22,12 @@ public class Item {
     @Column
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "users_id")
     private User owner;
+
+    @Transient
+    private Long ownerId;
 
     @Column
     private Boolean available;

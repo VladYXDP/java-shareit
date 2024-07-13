@@ -17,18 +17,29 @@ public class ItemTransfer {
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
-                .owner(userTransfer.toDto(entity.getOwner()))
+//                .ownerId(entity.getOwnerId())
+//                .owner(userTransfer.toDto(entity.getOwner()))
                 .available(entity.getAvailable())
                 .build();
     }
 
-    public Item toEntity(ItemDto entityDto) {
+    public Item toItemCreate(ItemDto dto) {
         return Item.builder()
-                .id(entityDto.getId())
-                .name(entityDto.getName())
-                .description(entityDto.getDescription())
-                .available(entityDto.getAvailable())
-                .owner(userTransfer.toUser(entityDto.getOwner()))
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .ownerId(dto.getOwnerId())
+                .available(dto.getAvailable())
+                .build();
+    }
+
+    public Item toItem(ItemDto dto) {
+        return Item.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .available(dto.getAvailable())
+                .ownerId(dto.getOwnerId())
+//                .owner(userTransfer.toUser(entityDto.getOwner()))
                 .build();
     }
 }
