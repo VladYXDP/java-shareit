@@ -2,7 +2,10 @@ package ru.practicum.shareit.item;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.user.User;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "items")
@@ -25,6 +28,9 @@ public class Item {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "users_id")
     private User owner;
+
+    @OneToMany(mappedBy = "item")
+    private Set<Booking> bookings;
 
     @Transient
     private Long ownerId;
