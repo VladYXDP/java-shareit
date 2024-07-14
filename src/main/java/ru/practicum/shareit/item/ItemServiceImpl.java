@@ -1,11 +1,13 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserServiceImpl;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -54,10 +56,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Set<Item> search(String search) {
-        Set<Item> items = itemsRepository
-                .findAllByDescriptionLikeIgnoreCaseOrNameLikeIgnoreCase(
-                        "%" + search + "%",
-                        "%" + search + "%");
+        if(search.isEmpty()) {
+            return new HashSet<>();
+        }
+        Set<Item> items = itemsRepository.search("%" + search + "%","%" + search + "%");
         return items;
     }
 
