@@ -19,6 +19,9 @@ public class BookingTransfer {
                 .id(booking.getId())
                 .start(booking.getStartDate())
                 .end(booking.getEndDate())
+                .status(booking.getStatus())
+                .booker(booking.getBooker())
+                .item(booking.getItem())
                 .build();
     }
 }

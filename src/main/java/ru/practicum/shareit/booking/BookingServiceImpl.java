@@ -22,7 +22,8 @@ public class BookingServiceImpl implements BookingService {
         Item item = itemService.get(booking.getItemId(), booking.getUserId());
         if (item.getAvailable()) {
             booking.setItem(item);
-            booking.setUser(user);
+            booking.setBooker(user);
+            booking.setStatus(BookingStatus.WAITING);
             return bookingRepository.save(booking);
         } else {
             throw new ItemAvailableException("Предмет с id " + item.getId() + " недоступен для бронирования!");
