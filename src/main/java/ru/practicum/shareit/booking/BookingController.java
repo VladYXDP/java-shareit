@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.exceptions.BookingDateException;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/bookings")
@@ -20,14 +20,14 @@ public class BookingController {
 
     //Бронирование
     @PostMapping
-    public BookingDto add(@Valid @RequestBody BookingDto dto,
-                          @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
+    public CreateBookingDto add(@Valid @RequestBody BookingDto dto,
+                                @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
         if (dto.getEnd().isAfter(LocalDateTime.now())) {
             if (dto.getEnd().isAfter(dto.getStart())) {
                 if (!dto.getStart().equals(dto.getEnd())) {
                     if (dto.getStart().isAfter(LocalDateTime.now())) {
                         dto.setUserId(userId);
-                        return bookingTransfer.toDto(bookingService.add(bookingTransfer.toEntity(dto)));
+                        return bookingTransfer.toCreateDto(bookingService.add(bookingTransfer.toEntity(dto)));
                     } else {
                         throw new BookingDateException("Ошибка валидации данных! Дата начала должна быть позже текущей даты - ! " + LocalDateTime.now());
                     }
@@ -42,6 +42,13 @@ public class BookingController {
         }
     }
 
+    @PatchMapping("/{bookingId}")
+    public CreateBookingDto approved(@Positive @PathVariable("bookingId") Long bookingId,
+                                     @RequestParam(value = "approved", required = false, defaultValue = "false") Boolean approved,
+                                     @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
+        return bookingTransfer.toCreateDto(bookingService.approved(bookingId, userId, approved));
+    }
+
     //Подтверждение бронирования
     @PostMapping(value = "/{bookingId}")
     public void complete() {
@@ -49,12 +56,23 @@ public class BookingController {
     }
 
     @GetMapping(value = "/{bookingId}")
-    public void get() {
+    public CreateBookingDto get(@Positive @PathVariable("bookingId") Long bookingId,
+                                @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
+        return bookingTransfer.toCreateDto(bookingService.get(bookingId, userId));
+    }
 
+    @GetMapping(value = "/owner")
+    public List<CreateBookingDto> getByOwner(@Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+                                             @RequestParam(value = "state", required = false, defaultValue = "ALL") String state) {
+        return bookingTransfer.toListCreateDto(bookingService.getByOwner(userId));
     }
 
     @GetMapping
-    public void getAllCurrentUser() {
-
+    public List<CreateBookingDto> getAllByUser(@Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+                                               @RequestParam(value = "state", required = false, defaultValue = "ALL") String state) {
+        if (state.equals("UNSUPPORTED_STATUS")) {
+            throw new IllegalStateException("Unknown state: UNSUPPORTED_STATUS");
+        }
+        return bookingTransfer.toListCreateDto(bookingService.getAllByUser(userId, BookingControllerStates.valueOf(state)));
     }
 }

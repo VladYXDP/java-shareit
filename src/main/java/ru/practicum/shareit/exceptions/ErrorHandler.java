@@ -58,4 +58,10 @@ public class ErrorHandler {
     public Map<String, String> handleBookingDateException(final BookingDateException e) {
         return Map.of("message", e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleIllegalStateException(final IllegalStateException e) {
+        return Map.of("Error message", e.getMessage());
+    }
 }

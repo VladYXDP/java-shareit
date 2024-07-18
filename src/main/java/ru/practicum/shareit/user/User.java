@@ -2,8 +2,10 @@ package ru.practicum.shareit.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.item.Item;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,4 +28,7 @@ public class User {
 
     @OneToMany(mappedBy = "owner")
     private Set<Item> items;
+
+    @OneToMany(mappedBy = "booker")
+    private List<Booking> booking;
 }
