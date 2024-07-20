@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking;
 
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -49,12 +48,6 @@ public class BookingController {
         return bookingTransfer.toCreateDto(bookingService.approved(bookingId, userId, approved));
     }
 
-    //Подтверждение бронирования
-    @PostMapping(value = "/{bookingId}")
-    public void complete() {
-
-    }
-
     @GetMapping(value = "/{bookingId}")
     public CreateBookingDto get(@Positive @PathVariable("bookingId") Long bookingId,
                                 @Positive @RequestHeader("X-Sharer-User-Id") Long userId) {
@@ -64,15 +57,13 @@ public class BookingController {
     @GetMapping(value = "/owner")
     public List<CreateBookingDto> getByOwner(@Positive @RequestHeader("X-Sharer-User-Id") Long userId,
                                              @RequestParam(value = "state", required = false, defaultValue = "ALL") String state) {
+        BookingControllerStates.getState(state);
         return bookingTransfer.toListCreateDto(bookingService.getByOwner(userId));
     }
 
     @GetMapping
     public List<CreateBookingDto> getAllByUser(@Positive @RequestHeader("X-Sharer-User-Id") Long userId,
                                                @RequestParam(value = "state", required = false, defaultValue = "ALL") String state) {
-        if (state.equals("UNSUPPORTED_STATUS")) {
-            throw new IllegalStateException("Unknown state: UNSUPPORTED_STATUS");
-        }
-        return bookingTransfer.toListCreateDto(bookingService.getAllByUser(userId, BookingControllerStates.valueOf(state)));
+        return bookingTransfer.toListCreateDto(bookingService.getAllByUser(userId, BookingControllerStates.getState(state)));
     }
 }

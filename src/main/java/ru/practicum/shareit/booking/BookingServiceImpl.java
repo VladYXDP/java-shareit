@@ -2,8 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exceptions.ItemAvailableException;
-import ru.practicum.shareit.exceptions.NotFoundException;
+import ru.practicum.shareit.exceptions.*;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.user.User;
@@ -28,6 +27,9 @@ public class BookingServiceImpl implements BookingService {
     public Booking add(Booking booking) {
         User user = userService.get(booking.getUserId());
         Item item = itemService.get(booking.getItemId(), booking.getUserId());
+        if (item.getOwner().getId() == user.getId()) {
+            throw new CreateBookingException("Владелец не может создать бронь для своей вещи!");
+        }
         if (item.getAvailable()) {
             booking.setItem(item);
             booking.setBooker(user);
@@ -40,21 +42,44 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking approved(Long bookingId, Long userId, Boolean approved) {
-        userService.get(userId);
-        Booking booking = get(bookingId, userId);
-        booking.setStatus(BookingStatus.APPROVED);
-        return bookingRepository.save(booking);
+        User user = userService.get(userId);
+        Optional<Booking> bookingOpt = bookingRepository.getBookingById(bookingId);
+        if (bookingOpt.isPresent()) {
+            Booking booking = bookingOpt.get();
+            if (user.equals(booking.getBooker()) && booking.getStatus().equals(BookingStatus.WAITING) && approved) {
+                throw new UpdateStatusException("Попытка бронирования уже существует " + bookingId);
+            } else if (user.getItems().contains(booking.getItem())) {
+                if (approved) {
+                    if (booking.getStatus().equals(BookingStatus.APPROVED)) {
+                        throw new ApprovedStatusAlreadyExistsException("Ошибка обновления статуса!");
+                    }
+                    booking.setStatus(BookingStatus.APPROVED);
+                } else {
+                    booking.setStatus(BookingStatus.REJECTED);
+                }
+                return bookingRepository.save(booking);
+            } else {
+                throw new UpdateException("Ошибка обновления бронирования " + bookingId + " пользователем " + userId);
+            }
+        } else {
+            throw new NotFoundException("Ошибка обновления бронирования с id " + bookingId + "!");
+        }
     }
 
     @Override
     public Booking get(Long bookingId, Long userId) {
-        userService.get(userId);
+        User user = userService.get(userId);
         Optional<Booking> bookingOpt = bookingRepository.getBookingById(bookingId);
+        Booking booking;
         if (bookingOpt.isPresent()) {
-            return bookingOpt.get();
-        } else {
-            throw new NotFoundException("Ошибка получения бронирования с id " + bookingId + "!");
+            booking = bookingOpt.get();
+            if (user.getItems().contains(booking.getItem())) {
+                return booking;
+            } else if (booking.getBooker().equals(user)) {
+                return booking;
+            }
         }
+        throw new NotFoundException("Ошибка получения бронирования с id " + bookingId + "!");
     }
 
     @Override
