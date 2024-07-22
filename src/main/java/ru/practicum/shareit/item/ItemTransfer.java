@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.booking.ItemBookingDto;
 import ru.practicum.shareit.user.UserTransfer;
 
 @Component
@@ -13,14 +14,27 @@ public class ItemTransfer {
     private final UserTransfer userTransfer;
 
     public ItemDto toDto(Item entity) {
-        return ItemDto.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .description(entity.getDescription())
+        if (entity.getLastBooking() != null && entity.getNextBooking() != null) {
+            return ItemDto.builder()
+                    .id(entity.getId())
+                    .name(entity.getName())
+                    .description(entity.getDescription())
 //                .ownerId(entity.getOwnerId())
 //                .owner(userTransfer.toDto(entity.getOwner()))
-                .available(entity.getAvailable())
-                .build();
+                    .available(entity.getAvailable())
+                    .lastBooking(new ItemBookingDto(entity.getLastBooking().getId(), entity.getLastBooking().getBooker().getId()))
+                    .nextBooking(new ItemBookingDto(entity.getNextBooking().getId(), entity.getNextBooking().getBooker().getId()))
+                    .build();
+        } else {
+            return ItemDto.builder()
+                    .id(entity.getId())
+                    .name(entity.getName())
+                    .description(entity.getDescription())
+//                .ownerId(entity.getOwnerId())
+//                .owner(userTransfer.toDto(entity.getOwner()))
+                    .available(entity.getAvailable())
+                    .build();
+        }
     }
 
     public Item toItemCreate(ItemDto dto) {

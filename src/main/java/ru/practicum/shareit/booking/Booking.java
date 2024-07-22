@@ -5,9 +5,7 @@ import lombok.*;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "bookings")
@@ -32,7 +30,7 @@ public class  Booking {
     @JoinColumn(name = "items_id", nullable = false)
     private Item item;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "booker_id", nullable = false)
     private User booker;
 

@@ -83,11 +83,34 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getByOwner(Long userId) {
-        userService.get(userId);
-        List<Booking> bookings = bookingRepository.findAll().stream()
-                .sorted(Comparator.comparing(Booking::getId).reversed())
-                .toList();
+    public List<Booking> getByOwner(Long userId, BookingControllerStates state) {
+        List<Booking> bookings = new ArrayList<>();
+        User user = userService.get(userId);
+        switch (state) {
+            case ALL -> bookings = bookingRepository.findAll().stream()
+                    .sorted(Comparator.comparing(Booking::getId).reversed())
+                    .toList();
+            case PAST -> bookings = bookingRepository.findAll().stream()
+                    .filter(it -> it.getEndDate().isBefore(LocalDateTime.now()) && it.getBooker().getId() != userId)
+                    .sorted(Comparator.comparing(Booking::getId).reversed())
+                    .collect(Collectors.toList());
+            case FUTURE -> bookings = bookingRepository.findAll().stream()
+                    .filter(it -> it.getStartDate().isAfter(LocalDateTime.now()) && it.getBooker().getId() != userId)
+                    .sorted(Comparator.comparing(Booking::getId).reversed())
+                    .toList();
+            case CURRENT -> bookings = bookingRepository.findAll().stream()
+                    .filter(it -> it.getStatus().equals(BookingStatus.APPROVED) && it.getBooker().getId() != userId)
+                    .sorted(Comparator.comparing(Booking::getId).reversed())
+                    .collect(Collectors.toList());
+            case WAITING -> bookings = bookingRepository.findAll().stream()
+                    .filter(it -> it.getStatus().equals(BookingStatus.WAITING) && it.getBooker().getId() != userId)
+                    .sorted(Comparator.comparing(Booking::getId).reversed())
+                    .collect(Collectors.toList());
+            case REJECTED -> bookings = bookingRepository.findAll().stream()
+                    .filter(it -> it.getStatus().equals(BookingStatus.REJECTED) && it.getBooker().getId() != userId)
+                    .sorted(Comparator.comparing(Booking::getId).reversed())
+                    .collect(Collectors.toList());
+        }
         return bookings;
     }
 
@@ -99,7 +122,7 @@ public class BookingServiceImpl implements BookingService {
             case ALL -> bookings = bookingRepository.findAllByBookerId(userId).stream()
                     .sorted(Comparator.comparing(Booking::getId).reversed())
                     .toList();
-            case PAST -> bookings = bookingRepository.getBookingById(userId).stream()
+            case PAST -> bookings = bookingRepository.findAllByBookerId(userId).stream()
                     .filter(it -> it.getEndDate().isBefore(LocalDateTime.now()))
                     .sorted(Comparator.comparing(Booking::getId).reversed())
                     .collect(Collectors.toList());
@@ -107,19 +130,24 @@ public class BookingServiceImpl implements BookingService {
                     .filter(it -> it.getStartDate().isAfter(LocalDateTime.now()))
                     .sorted(Comparator.comparing(Booking::getId).reversed())
                     .toList();
-            case CURRENT -> bookings = bookingRepository.getBookingById(userId).stream()
+            case CURRENT -> bookings = bookingRepository.findAllByBookerId(userId).stream()
                     .filter(it -> it.getStatus().equals(BookingStatus.APPROVED))
                     .sorted(Comparator.comparing(Booking::getId).reversed())
                     .collect(Collectors.toList());
-            case WAITING -> bookings = bookingRepository.getBookingById(userId).stream()
+            case WAITING -> bookings = bookingRepository.findAllByBookerId(userId).stream()
                     .filter(it -> it.getStatus().equals(BookingStatus.WAITING))
                     .sorted(Comparator.comparing(Booking::getId).reversed())
                     .collect(Collectors.toList());
-            case REJECTED -> bookings = bookingRepository.getBookingById(userId).stream()
+            case REJECTED -> bookings = bookingRepository.findAllByBookerId(userId).stream()
                     .filter(it -> it.getStatus().equals(BookingStatus.REJECTED))
                     .sorted(Comparator.comparing(Booking::getId).reversed())
                     .collect(Collectors.toList());
         }
         return bookings;
+    }
+
+    @Override
+    public List<Booking> getAllBookingByItem(Item item) {
+        return bookingRepository.findAllByItem(item);
     }
 }

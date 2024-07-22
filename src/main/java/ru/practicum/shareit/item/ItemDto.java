@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import ru.practicum.shareit.booking.ItemBookingDto;
 import ru.practicum.shareit.user.UserDto;
 
 @Getter
@@ -15,4 +16,7 @@ public class ItemDto {
     private Long ownerId;
     private UserDto owner;
     private Boolean available;
+
+    private ItemBookingDto lastBooking;
+    private ItemBookingDto nextBooking;
 }

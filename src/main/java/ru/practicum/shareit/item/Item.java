@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.user.User;
 
 import java.util.Set;
@@ -32,9 +33,15 @@ public class Item {
     @OneToMany(mappedBy = "item")
     private Set<Booking> bookings;
 
-    @Transient
-    private Long ownerId;
-
     @Column
     private Boolean available;
+
+    @Transient
+    private Booking lastBooking;
+
+    @Transient
+    private Booking nextBooking;
+
+    @Transient
+    private Long ownerId;
 }
