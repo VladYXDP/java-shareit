@@ -3,9 +3,9 @@ package ru.practicum.shareit.item;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.practicum.shareit.booking.Booking;
-import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.user.User;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,6 +32,9 @@ public class Item {
 
     @OneToMany(mappedBy = "item")
     private Set<Booking> bookings;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
+    private List<Comment> comments;
 
     @Column
     private Boolean available;

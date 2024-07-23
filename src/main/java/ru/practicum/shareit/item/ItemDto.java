@@ -6,6 +6,8 @@ import lombok.Setter;
 import ru.practicum.shareit.booking.ItemBookingDto;
 import ru.practicum.shareit.user.UserDto;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -19,4 +21,5 @@ public class ItemDto {
 
     private ItemBookingDto lastBooking;
     private ItemBookingDto nextBooking;
+    private List<CommentDto> comments;
 }

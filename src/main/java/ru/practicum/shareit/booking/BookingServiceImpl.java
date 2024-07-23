@@ -9,10 +9,7 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,20 +83,22 @@ public class BookingServiceImpl implements BookingService {
     public List<Booking> getByOwner(Long userId, BookingControllerStates state) {
         List<Booking> bookings = new ArrayList<>();
         User user = userService.get(userId);
+        Set<Item> item = itemService.findAllByUserId(userId);
+        LocalDateTime now = LocalDateTime.now();
         switch (state) {
             case ALL -> bookings = bookingRepository.findAll().stream()
                     .sorted(Comparator.comparing(Booking::getId).reversed())
                     .toList();
             case PAST -> bookings = bookingRepository.findAll().stream()
-                    .filter(it -> it.getEndDate().isBefore(LocalDateTime.now()) && it.getBooker().getId() != userId)
+                    .filter(it -> it.getEndDate().isBefore(now) && it.getBooker().getId() != userId)
                     .sorted(Comparator.comparing(Booking::getId).reversed())
                     .collect(Collectors.toList());
             case FUTURE -> bookings = bookingRepository.findAll().stream()
-                    .filter(it -> it.getStartDate().isAfter(LocalDateTime.now()) && it.getBooker().getId() != userId)
+                    .filter(it -> it.getStartDate().isAfter(now) && it.getBooker().getId() != userId)
                     .sorted(Comparator.comparing(Booking::getId).reversed())
                     .toList();
             case CURRENT -> bookings = bookingRepository.findAll().stream()
-                    .filter(it -> it.getStatus().equals(BookingStatus.APPROVED) && it.getBooker().getId() != userId)
+                    .filter(it -> item.contains(it.getItem()) && it.getStartDate().isBefore(now) && it.getEndDate().isAfter(now.plusMinutes(5)))
                     .sorted(Comparator.comparing(Booking::getId).reversed())
                     .collect(Collectors.toList());
             case WAITING -> bookings = bookingRepository.findAll().stream()
@@ -117,7 +116,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getAllByUser(Long userId, BookingControllerStates state) {
         List<Booking> bookings = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
         userService.get(userId);
+        Set<Item> item = itemService.findAllByUserId(userId);
         switch (state) {
             case ALL -> bookings = bookingRepository.findAllByBookerId(userId).stream()
                     .sorted(Comparator.comparing(Booking::getId).reversed())
@@ -131,8 +132,9 @@ public class BookingServiceImpl implements BookingService {
                     .sorted(Comparator.comparing(Booking::getId).reversed())
                     .toList();
             case CURRENT -> bookings = bookingRepository.findAllByBookerId(userId).stream()
-                    .filter(it -> it.getStatus().equals(BookingStatus.APPROVED))
-                    .sorted(Comparator.comparing(Booking::getId).reversed())
+                    .filter(it -> (it.getStatus().equals(BookingStatus.APPROVED) || it.getStatus().equals(BookingStatus.REJECTED))
+                            && it.getStartDate().isBefore(now) && it.getEndDate().isAfter(it.getStartDate().plusMinutes(5)))
+                    .sorted(Comparator.comparing(Booking::getStartDate))
                     .collect(Collectors.toList());
             case WAITING -> bookings = bookingRepository.findAllByBookerId(userId).stream()
                     .filter(it -> it.getStatus().equals(BookingStatus.WAITING))

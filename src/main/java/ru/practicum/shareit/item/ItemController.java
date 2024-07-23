@@ -1,7 +1,5 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.websocket.server.PathParam;
@@ -22,6 +20,7 @@ public class ItemController {
 
     private final ItemService itemService;
     private final ItemTransfer itemTransfer;
+    private final CommentTransfer commentTransfer;
 
     @Valid
     @PostMapping
@@ -53,6 +52,13 @@ public class ItemController {
     public ItemDto get(@Positive @PathVariable("itemId") Long itemId,
                        @RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemTransfer.toDto(itemService.get(itemId, userId));
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@Positive @PathVariable("itemId") Long itemId,
+                                 @Positive @RequestHeader("X-Sharer-User-Id") Long userId,
+                                 @Valid @RequestBody CommentDto body) {
+        return commentTransfer.toDto(itemService.addComment(commentTransfer.toComment(body), userId, itemId));
     }
 
     @GetMapping

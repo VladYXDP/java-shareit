@@ -12,6 +12,7 @@ import ru.practicum.shareit.user.UserTransfer;
 public class ItemTransfer {
 
     private final UserTransfer userTransfer;
+    private final CommentTransfer commentTransfer;
 
     public ItemDto toDto(Item entity) {
         if (entity.getLastBooking() != null && entity.getNextBooking() != null) {
@@ -19,20 +20,18 @@ public class ItemTransfer {
                     .id(entity.getId())
                     .name(entity.getName())
                     .description(entity.getDescription())
-//                .ownerId(entity.getOwnerId())
-//                .owner(userTransfer.toDto(entity.getOwner()))
                     .available(entity.getAvailable())
                     .lastBooking(new ItemBookingDto(entity.getLastBooking().getId(), entity.getLastBooking().getBooker().getId()))
                     .nextBooking(new ItemBookingDto(entity.getNextBooking().getId(), entity.getNextBooking().getBooker().getId()))
+                    .comments(commentTransfer.toDtoList(entity.getComments()))
                     .build();
         } else {
             return ItemDto.builder()
                     .id(entity.getId())
                     .name(entity.getName())
                     .description(entity.getDescription())
-//                .ownerId(entity.getOwnerId())
-//                .owner(userTransfer.toDto(entity.getOwner()))
                     .available(entity.getAvailable())
+                    .comments(commentTransfer.toDtoList(entity.getComments()))
                     .build();
         }
     }
@@ -53,7 +52,6 @@ public class ItemTransfer {
                 .description(dto.getDescription())
                 .available(dto.getAvailable())
                 .ownerId(dto.getOwnerId())
-//                .owner(userTransfer.toUser(entityDto.getOwner()))
                 .build();
     }
 }

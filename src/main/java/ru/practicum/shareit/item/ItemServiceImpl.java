@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.exceptions.CreateCommentException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserServiceImpl;
@@ -22,6 +24,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserServiceImpl userService;
     private final ItemsRepository itemsRepository;
     private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public Item add(Item item) {
@@ -57,16 +60,25 @@ public class ItemServiceImpl implements ItemService {
                 if (lastBookingOpt.isPresent()) {
                     Booking lastBooking = lastBookingOpt.get();
                     if (lastBooking.getBooker().getId() != user.getId()) {
-                        item.setLastBooking(lastBookingOpt.get());
+                        item.setLastBooking(lastBooking);
+                    }
+                } else {
+                    Optional<Booking> lastCurrentBookingOpt = bookingRepository.findCurrent(now, item.getId());
+                    if (lastCurrentBookingOpt.isPresent()) {
+                        Booking lastBooking = lastCurrentBookingOpt.get();
+                        if (lastBooking.getBooker().getId() != user.getId()) {
+                            item.setLastBooking(lastBooking);
+                        }
                     }
                 }
                 if (nextBookingOpt.isPresent()) {
                     Booking nextBooking = nextBookingOpt.get();
                     if (nextBooking.getBooker().getId() != user.getId()) {
-                        item.setNextBooking(nextBookingOpt.get());
+                        item.setNextBooking(nextBooking);
                     }
                 }
             }
+            item.setComments(commentRepository.findAllByItemId(itemId));
             return item;
         } else {
             throw new NotFoundException("Предмет с id " + itemId + " не найден!");
@@ -85,6 +97,21 @@ public class ItemServiceImpl implements ItemService {
         }
         Set<Item> items = itemsRepository.search("%" + search + "%", "%" + search + "%");
         return items;
+    }
+
+    @Override
+    public Comment addComment(Comment comment, Long userId, Long itemId) {
+        User user = userService.get(userId);
+        Item item = itemsRepository.getItemById(itemId);
+        List<Booking> booking = bookingRepository.findAllByBookerIdAndItem(userId, item);
+        boolean check = booking.stream().anyMatch(it -> it.getStatus().equals(BookingStatus.APPROVED)
+                && it.getStartDate().isBefore(LocalDateTime.now()));
+        if (!check) {
+            throw new CreateCommentException("Пользователь " + userId + " не пользовался предметом " + itemId);
+        }
+        comment.setItem(item);
+        comment.setAuthor(user);
+        return commentRepository.save(comment);
     }
 
     @Override

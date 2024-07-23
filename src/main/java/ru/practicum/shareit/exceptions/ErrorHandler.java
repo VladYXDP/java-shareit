@@ -94,4 +94,10 @@ public class ErrorHandler {
     public Map<String, String> handleCreateBookingException(final CreateBookingException e) {
         return Map.of("error", e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleCreateCommentException(final CreateCommentException e) {
+        return Map.of("error", e.getMessage());
+    }
 }

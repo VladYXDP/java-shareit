@@ -14,5 +14,7 @@ public interface ItemService {
 
     Set<Item> search(String search);
 
+    Comment addComment(Comment comment, Long userId, Long itemId);
+
     Set<Item> findAllByUserId(Long userId);
 }
