@@ -1,15 +1,11 @@
 package ru.practicum.shareit.booking;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.ItemBookingDto;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserBookingDto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter

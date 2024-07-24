@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
