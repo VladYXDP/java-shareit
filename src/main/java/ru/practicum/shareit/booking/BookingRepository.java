@@ -37,7 +37,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(value = "SELECT b.id, b.start_date, b.end_date, b.items_id, b.booker_id, b.status, u.id AS user_id, u.email, u.user_name " +
             "FROM bookings AS b INNER JOIN users AS u ON b.booker_id = u.id " +
-            "WHERE b.start_date <= ?1 AND b.end_date >= ?1 AND b.items_id = ?2 " +
+            "WHERE b.start_date < ?1 AND b.end_date > ?1 AND b.items_id = ?2 " +
             "ORDER BY b.start_date " +
             "ASC LIMIT 1", nativeQuery = true)
     Optional<Booking> findCurrent(LocalDateTime startDate, Long itemId);

@@ -134,7 +134,7 @@ public class BookingServiceImpl implements BookingService {
             case CURRENT -> bookings = bookingRepository.findAllByBookerId(userId).stream()
                     .filter(it -> (it.getStatus().equals(BookingStatus.APPROVED) || it.getStatus().equals(BookingStatus.REJECTED))
                             && it.getStartDate().isBefore(now) && it.getEndDate().isAfter(it.getStartDate().plusMinutes(5)))
-                    .sorted(Comparator.comparing(Booking::getStartDate))
+                    .sorted(Comparator.comparing(Booking::getStartDate).reversed())
                     .collect(Collectors.toList());
             case WAITING -> bookings = bookingRepository.findAllByBookerId(userId).stream()
                     .filter(it -> it.getStatus().equals(BookingStatus.WAITING))

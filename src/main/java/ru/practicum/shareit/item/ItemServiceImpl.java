@@ -51,8 +51,9 @@ public class ItemServiceImpl implements ItemService {
     public Item get(Long itemId, Long userId) {
         User user = userService.get(userId);
         Item item = itemsRepository.getItemById(itemId);
-        List<Booking> bookings = bookingRepository.findAllByItemOrderByStartDateDesc(item);
+        List<Booking> bookings = bookingRepository.findAllByItem(item);
         if (item != null) {
+            boolean isOwner = item.getOwner().getId() == userId;
             if (!bookings.isEmpty()) {
                 LocalDateTime now = LocalDateTime.now();
                 Optional<Booking> lastBookingOpt = bookingRepository.findLastBooking(now, item.getId());
@@ -62,21 +63,17 @@ public class ItemServiceImpl implements ItemService {
                     if (lastBooking.getBooker().getId() != user.getId()) {
                         item.setLastBooking(lastBooking);
                     }
-                } else {
-                    Optional<Booking> lastCurrentBookingOpt = bookingRepository.findCurrent(now, item.getId());
-                    if (lastCurrentBookingOpt.isPresent()) {
-                        Booking lastBooking = lastCurrentBookingOpt.get();
-                        if (lastBooking.getBooker().getId() != user.getId()) {
-                            item.setLastBooking(lastBooking);
-                        }
-                    }
                 }
                 if (nextBookingOpt.isPresent()) {
                     Booking nextBooking = nextBookingOpt.get();
-                    if (nextBooking.getBooker().getId() != user.getId()) {
+                    if (nextBooking.getBooker().getId() != user.getId() && !nextBooking.getStatus().equals(BookingStatus.REJECTED)) {
                         item.setNextBooking(nextBooking);
                     }
                 }
+            }
+            if (!isOwner) {
+                item.setLastBooking(null);
+                item.setNextBooking(null);
             }
             item.setComments(commentRepository.findAllByItemId(itemId));
             return item;
@@ -125,13 +122,13 @@ public class ItemServiceImpl implements ItemService {
                     if (lastBookingOpt.isPresent()) {
                         Booking lastBooking = lastBookingOpt.get();
                         if (lastBooking.getBooker().getId() != userId) {
-                            item.setLastBooking(lastBookingOpt.get());
+                            item.setLastBooking(lastBooking);
                         }
                     }
                     if (nextBookingOpt.isPresent()) {
                         Booking nextBooking = nextBookingOpt.get();
                         if (nextBooking.getBooker().getId() != userId) {
-                            item.setNextBooking(nextBookingOpt.get());
+                            item.setNextBooking(nextBooking);
                         }
                     }
                     return item;
