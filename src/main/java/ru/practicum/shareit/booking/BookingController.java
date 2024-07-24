@@ -56,7 +56,7 @@ public class BookingController {
 
     @GetMapping(value = "/owner")
     public List<CreateBookingDto> getByOwner(@Positive @RequestHeader("X-Sharer-User-Id") Long userId,
-                                             @RequestParam(value = "state", required = false, defaultValue = "ALL") String state) {;
+                                             @RequestParam(value = "state", required = false, defaultValue = "ALL") String state) {
         return bookingTransfer.toListCreateDto(bookingService.getByOwner(userId, BookingControllerStates.getState(state)));
     }
 
