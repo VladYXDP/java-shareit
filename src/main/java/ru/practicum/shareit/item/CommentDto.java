@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,8 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 public class CommentDto {
     private long id;
-    @NotNull
-    @NotEmpty
+    @Size(min = 1)
     private String text;
     private Item item;
     private String authorName;

@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingStatus;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ItemServiceImpl implements ItemService {
 
     private final UserServiceImpl userService;
@@ -48,6 +50,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Item get(Long itemId, Long userId) {
         User user = userService.get(userId);
         Item item = itemsRepository.getItemById(itemId);
@@ -88,6 +91,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<Item> search(String search) {
         if (search.isEmpty()) {
             return new HashSet<>();
@@ -112,6 +116,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<Item> findAllByUserId(Long userId) {
         Set<Item> items = userService.get(userId).getItems();
         LocalDateTime now = LocalDateTime.now();

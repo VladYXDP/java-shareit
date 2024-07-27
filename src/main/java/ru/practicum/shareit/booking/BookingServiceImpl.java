@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exceptions.*;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemService;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
@@ -64,6 +66,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Booking get(Long bookingId, Long userId) {
         User user = userService.get(userId);
         Optional<Booking> bookingOpt = bookingRepository.getBookingById(bookingId);
@@ -80,6 +83,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Booking> getByOwner(Long userId, BookingControllerStates state) {
         List<Booking> bookings = new ArrayList<>();
         User user = userService.get(userId);
@@ -114,6 +118,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Booking> getAllByUser(Long userId, BookingControllerStates state) {
         List<Booking> bookings = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now();
@@ -149,6 +154,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Booking> getAllBookingByItem(Item item) {
         return bookingRepository.findAllByItem(item);
     }

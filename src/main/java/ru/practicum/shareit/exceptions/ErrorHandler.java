@@ -36,12 +36,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> handleUserAlreadyExistException(final UserAlreadyExistException e) {
-        return Map.of("message", e.getMessage());
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleNotFoundException(final NotFoundException e) {
         return Map.of("message", e.getMessage());
