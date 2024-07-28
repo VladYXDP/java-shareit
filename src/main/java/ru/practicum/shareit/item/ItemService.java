@@ -1,44 +1,20 @@
 package ru.practicum.shareit.item;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import ru.practicum.shareit.user.UserStorage;
+import java.util.Set;
 
-import java.util.ArrayList;
-import java.util.List;
+public interface ItemService {
 
-@Service
-@RequiredArgsConstructor
-public class ItemService {
+    Item add(Item item);
 
-    private final ItemStorage itemStorage;
-    private final UserStorage userStorage;
+    Item update(Item item);
 
-    public Item add(Item item) {
-        userStorage.get(item.getOwner());
-        return itemStorage.add(item);
-    }
+    Item get(Long itemId, Long userId);
 
-    public Item update(Item item) {
-        return itemStorage.update(item);
-    }
+    Item delete();
 
-    public Item get(long userId, long itemId) {
-        return itemStorage.get(userId, itemId);
-    }
+    Set<Item> search(String search);
 
-    public List<Item> getAllByUser(long userId) {
-        userStorage.get(userId);
-        return itemStorage.getAllByUser(userId);
-    }
+    Comment addComment(Comment comment, Long userId, Long itemId);
 
-    public List<Item> search(String text) {
-        if (text.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return itemStorage.getAll().stream()
-                .filter(item -> item.getDesc().toLowerCase().contains(text.toLowerCase())
-                        && item.getAvailable().equals(Boolean.TRUE))
-                .toList();
-    }
+    Set<Item> findAllByUserId(Long userId);
 }

@@ -1,7 +1,5 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +24,7 @@ public class UserController {
         if (dto.getEmail() == null) {
             throw new ValidationException("Поле email обязательно для заполнения!");
         }
-        User user = userService.add(userTransfer.toUser(dto));
+        User user = userService.add(userTransfer.toUserCreate(dto));
         return userTransfer.toDto(user);
     }
 
@@ -43,13 +41,13 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public UserDto delete(@Positive @PathVariable Long userId) {
-        return userTransfer.toDto(userService.delete(userId));
+    public void delete(@Positive @PathVariable Long userId) {
+        userService.delete(userId);
     }
 
     @GetMapping
     public List<UserDto> getAll() {
-        return userService.getAll().stream()
+        return userService.findAll().stream()
                 .map(userTransfer::toDto)
                 .collect(Collectors.toList());
     }

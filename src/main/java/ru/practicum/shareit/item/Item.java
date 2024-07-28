@@ -1,16 +1,50 @@
 package ru.practicum.shareit.item;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.user.User;
 
-@Getter
+import java.util.List;
+import java.util.Set;
+
+@Entity
+@Table(name = "items")
 @Setter
+@Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Item {
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "item_name")
     private String name;
-    private String desc;
-    private Long owner;
+
+    @Column
+    private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "users_id")
+    private User owner;
+
+    @OneToMany(mappedBy = "item")
+    private Set<Booking> bookings;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
+    private List<Comment> comments;
+
+    @Column
     private Boolean available;
+
+    @Transient
+    private Booking lastBooking;
+
+    @Transient
+    private Booking nextBooking;
+
+    @Transient
+    private Long ownerId;
 }
