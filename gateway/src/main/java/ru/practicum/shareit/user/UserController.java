@@ -40,9 +40,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDto> getAll() {
-        return userService.findAll().stream()
-                .map(userTransfer::toDto)
-                .collect(Collectors.toList());
+    public ResponseEntity<Object> getAll() {
+        return userClient.getAll();
     }
 }

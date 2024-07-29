@@ -5,7 +5,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 
@@ -36,5 +35,9 @@ public class UserClient extends BaseClient {
 
     public ResponseEntity<Object> delete(Long userId) {
         return delete("/" + userId);
+    }
+
+    public ResponseEntity<Object> getAll() {
+        return get("");
     }
 }
