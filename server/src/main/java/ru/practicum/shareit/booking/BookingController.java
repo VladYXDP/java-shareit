@@ -15,7 +15,9 @@ public class BookingController {
 
     //Бронирование
     @PostMapping
-    public CreateBookingDto add(@RequestBody BookingDto dto) {
+    public CreateBookingDto add(@RequestBody BookingDto dto,
+                                @RequestHeader("X-Sharer-User-Id") Long userId) {
+        dto.setUserId(userId);
         return bookingTransfer.toCreateDto(bookingService.add(bookingTransfer.toEntity(dto)));
     }
 
