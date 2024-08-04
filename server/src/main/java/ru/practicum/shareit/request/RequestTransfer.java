@@ -9,7 +9,6 @@ public class RequestTransfer {
         return RequestDto.builder()
                 .id(request.getId())
                 .description(request.getDescription())
-                .requestorId(request.getRequestorId())
                 .build();
     }
 
@@ -17,7 +16,6 @@ public class RequestTransfer {
         return Request.builder()
                 .id(dto.getId())
                 .description(dto.getDescription())
-                .requestorId(dto.getRequestorId())
                 .build();
     }
 }

@@ -2,6 +2,8 @@ package ru.practicum.shareit.request;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.practicum.shareit.item.Item;
+import ru.practicum.shareit.user.User;
 
 @Entity
 @Table(name = "requests")
@@ -16,5 +18,10 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String description;
-    private Long requestorId;
+    @OneToOne
+    @JoinColumn(name = "users_id")
+    private User requestorId;
+    @OneToOne
+    @JoinColumn(name = "items_id")
+    private Item item;
 }

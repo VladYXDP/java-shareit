@@ -9,6 +9,8 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.comment.CommentDto;
 
+import java.util.Map;
+
 @Component
 public class ItemClient extends BaseClient {
 
@@ -23,7 +25,7 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> add(ItemDto dto) {
-        return post("", dto);
+        return post("", dto.getOwnerId(), dto);
     }
 
     public ResponseEntity<Object> get(Long itemId, Long userId) {
@@ -31,11 +33,11 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> update(ItemDto dto) {
-        return patch("/" + dto.getId(), dto.getOwnerId());
+        return patch("/" + dto.getId(), dto.getOwnerId(), dto);
     }
 
     public ResponseEntity<Object> addComment(CommentDto dto, Long userId, Long itemId) {
-        return post("/" + itemId + "/comment", userId);
+        return post("/" + itemId + "/comment", userId, dto);
     }
 
     public ResponseEntity<Object> getAllByUser(Long userId) {
@@ -43,6 +45,6 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> search(String text) {
-        return get("/" + text);
+        return get("/search", null, Map.of("text", text));
     }
 }
