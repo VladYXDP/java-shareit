@@ -37,7 +37,7 @@ public class ItemController {
                                          @Valid @RequestBody ItemDto dto,
                                          @Positive @RequestHeader(value = "X-Sharer-User-Id") Long userId) {
         dto.setId(itemId);
-//        dto.setOwnerId(userId);
+        dto.setOwnerId(userId);
         return itemClient.update(dto);
     }
 
