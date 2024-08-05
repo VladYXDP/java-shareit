@@ -25,7 +25,7 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> add(ItemDto dto) {
-        return post("", dto.getOwnerId(), dto);
+        return post("", 1L, dto);
     }
 
     public ResponseEntity<Object> get(Long itemId, Long userId) {
@@ -33,7 +33,7 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> update(ItemDto dto) {
-        return patch("/" + dto.getId(), dto.getOwnerId(), dto);
+        return patch("/" + dto.getId(), 1L, dto);
     }
 
     public ResponseEntity<Object> addComment(CommentDto dto, Long userId, Long itemId) {

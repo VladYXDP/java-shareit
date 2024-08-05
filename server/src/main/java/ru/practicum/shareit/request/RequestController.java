@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/requests")
 @RequiredArgsConstructor
@@ -17,10 +19,10 @@ public class RequestController {
         return requestTransfer.toDto(requestService.add(requestTransfer.toEntity(dto)));
     }
 
-//    @GetMapping
-//    public ResponseEntity<Object> getMyAll(@RequestHeader(value = "X-Sharer-User-Id") Long userId) {
-//        return requestService.get(userId);
-//    }
+    @GetMapping
+    public List<RequestDto> getMyAll(@RequestHeader(value = "X-Sharer-User-Id") Long userId) {
+        return requestTransfer.toDto(requestService.get(userId));
+    }
 //
 //    @GetMapping("/all")
 //    public ResponseEntity<Object> getAllAnotherUser(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
@@ -29,8 +31,8 @@ public class RequestController {
 //        return requestService.getAllAnotherUser(userId, from, size);
 //    }
 //
-//    @GetMapping("/{requestId}")
-//    public ResponseEntity<Object> getById(@PathVariable Long requestId) {
-//        return requestService.getById(requestId);
-//    }
+    @GetMapping("/{requestId}")
+    public RequestDto getById(@PathVariable Long requestId) {
+        return requestTransfer.toDto(requestService.getById(requestId));
+    }
 }

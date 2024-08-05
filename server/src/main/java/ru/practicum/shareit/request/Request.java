@@ -5,6 +5,9 @@ import lombok.*;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 @Table(name = "requests")
 @Getter
@@ -18,10 +21,10 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String description;
-    @OneToOne
+    private LocalDateTime created;
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "users_id")
     private User requestorId;
-    @OneToOne
-    @JoinColumn(name = "items_id")
-    private Item item;
+    @OneToMany(mappedBy = "request")
+    private List<Item> item;
 }

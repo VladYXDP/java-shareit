@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.item.Item;
+import ru.practicum.shareit.request.Request;
 
 import java.util.List;
 import java.util.Set;
@@ -31,4 +32,7 @@ public class User {
 
     @OneToMany(mappedBy = "booker")
     private List<Booking> booking;
+
+    @OneToMany(mappedBy = "requestorId")
+    private Set<Request> requests;
 }

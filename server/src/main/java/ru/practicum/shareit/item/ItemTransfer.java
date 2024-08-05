@@ -18,13 +18,13 @@ public class ItemTransfer {
                 .name(entity.getName())
                 .description(entity.getDescription())
                 .available(entity.getAvailable())
-                .lastBooking(entity.getLastBooking() != null
-                        ? new ItemBookingDto(entity.getLastBooking().getId(), entity.getLastBooking().getBooker().getId())
-                        : null)
-                .nextBooking(entity.getNextBooking() != null
-                        ? new ItemBookingDto(entity.getNextBooking().getId(), entity.getNextBooking().getBooker().getId())
-                        : null)
-                .comments(commentTransfer.toDtoList(entity.getComments()))
+//                .lastBooking(entity.getLastBooking() != null
+//                        ? new ItemBookingDto(entity.getLastBooking().getId(), entity.getLastBooking().getBooker().getId())
+//                        : null)
+//                .nextBooking(entity.getNextBooking() != null
+//                        ? new ItemBookingDto(entity.getNextBooking().getId(), entity.getNextBooking().getBooker().getId())
+//                        : null)
+//                .comments(commentTransfer.toDtoList(entity.getComments()))
                 .build();
     }
 
@@ -32,7 +32,8 @@ public class ItemTransfer {
         return Item.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
-                .ownerId(dto.getOwnerId())
+//                .ownerId(dto.getOwnerId())
+//                .requestId(dto.getRequestId())
                 .available(dto.getAvailable())
                 .build();
     }
@@ -43,7 +44,7 @@ public class ItemTransfer {
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .available(dto.getAvailable())
-                .ownerId(dto.getOwnerId())
+//                .ownerId(dto.getOwnerId())
                 .build();
     }
 }

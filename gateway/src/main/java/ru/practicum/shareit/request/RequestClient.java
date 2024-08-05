@@ -24,7 +24,7 @@ public class RequestClient extends BaseClient {
     }
 
     public ResponseEntity<Object> add(RequestDto dto) {
-        return post("", dto.getRequestorId());
+        return post("", dto.getRequestorId(), dto);
     }
 
     public ResponseEntity<Object> get(Long userId) {
