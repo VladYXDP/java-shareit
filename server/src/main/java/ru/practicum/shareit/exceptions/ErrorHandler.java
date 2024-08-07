@@ -84,6 +84,12 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleApprovedForUserException(final ApprovedForUserException e) {
+        return Map.of("error", e.getMessage());
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleCreateBookingException(final CreateBookingException e) {
         return Map.of("error", e.getMessage());

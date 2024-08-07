@@ -22,7 +22,7 @@ public class ItemController {
     @PostMapping
     public ItemDto add(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
                        @RequestBody ItemDto dto) {
-//        dto.setOwnerId(userId);
+        dto.setOwnerId(userId);
         return itemTransfer.toDto(itemService.add(itemTransfer.toItemCreate(dto)));
     }
 
@@ -31,7 +31,7 @@ public class ItemController {
                           @RequestBody ItemDto dto,
                           @RequestHeader(value = "X-Sharer-User-Id") Long userId) {
         dto.setId(itemId);
-//        dto.setOwnerId(userId);
+        dto.setOwnerId(userId);
         return itemTransfer.toDto(itemService.update(itemTransfer.toItem(dto)));
     }
 

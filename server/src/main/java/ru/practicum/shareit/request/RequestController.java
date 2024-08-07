@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,14 +22,14 @@ public class RequestController {
     public List<RequestDto> getMyAll(@RequestHeader(value = "X-Sharer-User-Id") Long userId) {
         return requestTransfer.toDto(requestService.get(userId));
     }
-//
+
 //    @GetMapping("/all")
 //    public ResponseEntity<Object> getAllAnotherUser(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
 //                                                    @RequestParam(name = "from", required = true, defaultValue = "0") Long from,
 //                                                    @RequestParam(name = "size", required = false) Long size) {
 //        return requestService.getAllAnotherUser(userId, from, size);
 //    }
-//
+
     @GetMapping("/{requestId}")
     public RequestDto getById(@PathVariable Long requestId) {
         return requestTransfer.toDto(requestService.getById(requestId));

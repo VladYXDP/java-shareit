@@ -41,7 +41,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking approved(Long bookingId, Long userId, Boolean approved) {
-        User user = userService.get(userId);
+        User user = getUser(userId);
         Optional<Booking> bookingOpt = bookingRepository.getBookingById(bookingId);
         if (bookingOpt.isPresent()) {
             Booking booking = bookingOpt.get();
@@ -157,5 +157,13 @@ public class BookingServiceImpl implements BookingService {
     @Transactional(readOnly = true)
     public List<Booking> getAllBookingByItem(Item item) {
         return bookingRepository.findAllByItem(item);
+    }
+
+    private User getUser(Long userId) {
+        try {
+            return userService.get(userId);
+        } catch (Exception e) {
+            throw new ApprovedForUserException("Ошибка подтверждения брони пользователем " + userId);
+        }
     }
 }

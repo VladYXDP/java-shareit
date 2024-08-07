@@ -34,6 +34,7 @@ public class ItemTransfer {
                 .description(dto.getDescription())
                 .ownerId(dto.getOwnerId())
                 .available(dto.getAvailable())
+                .requestId(dto.getRequestId())
                 .build();
     }
 

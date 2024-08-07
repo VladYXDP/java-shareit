@@ -16,7 +16,7 @@ public class ItemController {
 
     private final ItemClient itemClient;
 
-//    @Valid
+    @Valid
     @PostMapping
     public ResponseEntity<Object> add(@Positive @RequestHeader(value = "X-Sharer-User-Id") Long userId,
                                       @RequestBody ItemDto dto) {
@@ -29,7 +29,7 @@ public class ItemController {
         if (dto.getDescription() == null || dto.getDescription().isEmpty()) {
             throw new ValidationException("Ошибка добавление предмета! Недопустимое значение описания!");
         }
-        return itemClient.add(dto);
+        return itemClient.add(dto, userId);
     }
 
     @PatchMapping("/{itemId}")
@@ -37,8 +37,7 @@ public class ItemController {
                                          @Valid @RequestBody ItemDto dto,
                                          @Positive @RequestHeader(value = "X-Sharer-User-Id") Long userId) {
         dto.setId(itemId);
-        dto.setOwnerId(userId);
-        return itemClient.update(dto);
+        return itemClient.update(dto, userId);
     }
 
     @GetMapping("/{itemId}")

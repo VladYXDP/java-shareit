@@ -8,6 +8,8 @@ import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.exceptions.CreateCommentException;
 import ru.practicum.shareit.exceptions.NotFoundException;
+import ru.practicum.shareit.request.Request;
+import ru.practicum.shareit.request.RequestService;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserServiceImpl;
 
@@ -27,11 +29,16 @@ public class ItemServiceImpl implements ItemService {
     private final ItemsRepository itemsRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final RequestService requestService;
 
     @Override
     public Item add(Item item) {
         User user = userService.get(item.getOwnerId());
         item.setOwner(user);
+        if (item.getRequestId() != null) {
+            Request request = requestService.getById(item.getRequestId());
+            item.setRequest(request);
+        }
         item = itemsRepository.save(item);
         return item;
     }

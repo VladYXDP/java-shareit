@@ -15,9 +15,9 @@ public class RequestController {
 
     @PostMapping
     public ResponseEntity<Object> add(@Valid @RequestBody RequestDto dto,
-                                      @Positive @RequestHeader(value = "X-Sharer-User-Id") Long requestorId) {
-        dto.setRequestorId(requestorId);
-        return requestClient.add(dto);
+                                      @Positive @RequestHeader(value = "X-Sharer-User-Id") Long userId) {
+        dto.setRequestorId(userId);
+        return requestClient.add(dto, userId);
     }
 
     @GetMapping

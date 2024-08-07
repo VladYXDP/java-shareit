@@ -23,8 +23,8 @@ public class RequestClient extends BaseClient {
                 .build());
     }
 
-    public ResponseEntity<Object> add(RequestDto dto) {
-        return post("", dto.getRequestorId(), dto);
+    public ResponseEntity<Object> add(RequestDto dto, Long userId) {
+        return post("", userId, dto);
     }
 
     public ResponseEntity<Object> get(Long userId) {

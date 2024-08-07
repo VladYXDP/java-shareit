@@ -2,7 +2,6 @@ package ru.practicum.shareit.item;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.request.Request;
 import ru.practicum.shareit.user.User;
@@ -33,7 +32,7 @@ public class Item {
     private User owner;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "items_id")
+    @JoinColumn(name = "requests_id")
     private Request request;
 
     @OneToMany(mappedBy = "item")
@@ -50,6 +49,9 @@ public class Item {
 
     @Transient
     private Booking nextBooking;
+
+    @Transient
+    private Long requestId;
 
     @Transient
     private Long ownerId;

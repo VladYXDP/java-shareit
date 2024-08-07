@@ -20,7 +20,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidationException(final ValidationException e) {
-        return Map.of("message", e.getMessage());
+        return Map.of("error", e.getMessage());
     }
 
     @ExceptionHandler

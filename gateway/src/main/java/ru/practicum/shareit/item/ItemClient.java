@@ -24,15 +24,15 @@ public class ItemClient extends BaseClient {
                 .build());
     }
 
-    public ResponseEntity<Object> add(ItemDto dto) {
-        return post("", 1L, dto);
+    public ResponseEntity<Object> add(ItemDto dto, Long userId) {
+        return post("", userId, dto);
     }
 
     public ResponseEntity<Object> get(Long itemId, Long userId) {
         return get("/" + itemId, userId);
     }
 
-    public ResponseEntity<Object> update(ItemDto dto) {
+    public ResponseEntity<Object> update(ItemDto dto, Long userId) {
         return patch("/" + dto.getId(), 1L, dto);
     }
 
