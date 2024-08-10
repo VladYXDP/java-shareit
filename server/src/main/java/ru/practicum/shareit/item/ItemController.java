@@ -45,7 +45,7 @@ public class ItemController {
     public CommentDto addComment(@PathVariable("itemId") Long itemId,
                                  @RequestHeader("X-Sharer-User-Id") Long userId,
                                  @RequestBody CommentDto body) {
-        return commentTransfer.toDto(itemService.addComment(commentTransfer.toComment(body), userId, itemId));
+            return commentTransfer.toDto(itemService.addComment(commentTransfer.toComment(body), userId, itemId));
     }
 
     @GetMapping
