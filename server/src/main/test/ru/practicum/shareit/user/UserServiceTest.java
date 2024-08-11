@@ -1,115 +1,79 @@
 package ru.practicum.shareit.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.mockito.Answers;
+import org.mockito.Mockito;
+import ru.practicum.shareit.exceptions.NotFoundException;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-@WebMvcTest(UserController.class)
-@AutoConfigureMockMvc
+//@Transactional
+//@RequiredArgsConstructor(onConstructor_ = @Autowired)
+//@TestPropertySource(properties = "spring.datasource.url=jdbc:postgresql://localhost:5432/test")
+//@SpringJUnitConfig(UserServiceImpl.class)
 public class UserServiceTest {
 
-    @MockBean
-    private UserService userService;
-    @MockBean
-    private UserTransfer userTransfer;
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper parser;
+    private UserServiceImpl userService;
+    private UsersRepository usersRepository;
 
-    @Test
-    void add() throws Exception {
-        User user = User.builder()
-                .id(1L)
-                .email("main@email.ru")
-                .name("main")
-                .build();
-        UserDto userDtoReq = UserDto.builder()
-                .email("main@email.ru")
-                .name("main")
-                .build();
-        UserDto userDtoResp = UserDto.builder()
-                .id(1L)
-                .email("main@email.ru")
-                .name("main")
-                .build();
-        when(userService.add(any(User.class))).thenReturn(user);
-        when(userTransfer.toUserCreate(any(UserDto.class))).thenReturn(User.builder().name(user.getName()).email(user.getEmail()).build());
-        when(userTransfer.toDto(any(User.class))).thenReturn(userDtoResp);
-        mockMvc.perform(post("/users")
-                        .content(parser.writeValueAsString(userDtoReq))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(parser.writeValueAsString(userTransfer.toDto(user))));
+    static User userWithoutId;
+    static User userWithId;
+
+    @BeforeAll
+    static void initUser() {
+        userWithoutId = User.builder().email("test@email.ru").name("test").build();
+        userWithId = User.builder().id(1L).email("test@email.ru").name("test").build();
+    }
+
+    @BeforeEach
+    void setUp() {
+        usersRepository = mock(UsersRepository.class);
+        when(usersRepository.save(any(User.class))).thenReturn(userWithId);
+        when(usersRepository.getUserById(anyLong())).thenReturn(Optional.of(userWithId));
+        when(usersRepository.findAll()).thenReturn(Collections.emptyList());
+        wh
+        userService = new UserServiceImpl(usersRepository);
     }
 
     @Test
-    void update() throws Exception {
-        User user = User.builder()
-                .id(1L)
-                .email("main-update@email.ru")
-                .name("main-update")
-                .build();
-        UserDto userDtoReq = UserDto.builder()
-                .email("main@email.ru")
-                .name("main")
-                .build();
-        UserDto userDtoResp = UserDto.builder()
-                .id(1L)
-                .email("main-update@email.ru")
-                .name("main-update")
-                .build();
-        when(userService.update(any(User.class))).thenReturn(user);
-        when(userTransfer.toUser(any(UserDto.class))).thenReturn(User.builder().name(user.getName()).email(user.getEmail()).build());
-        when(userTransfer.toDto(any(User.class))).thenReturn(userDtoResp);
-        mockMvc.perform(patch("/users/{userId}", 1)
-                        .content(parser.writeValueAsString(userDtoReq))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(parser.writeValueAsString(userTransfer.toDto(user))));
+    void add() {
+        User user = userService.add(userWithoutId);
+        Assertions.assertNotNull(user);
+        verify(usersRepository, times(1)).save(userWithoutId);
     }
 
     @Test
-    void get() throws Exception {
-        User user = User.builder()
-                .id(1L)
-                .email("main@email.ru")
-                .name("main")
-                .build();
-        UserDto userDtoResp = UserDto.builder()
-                .id(1L)
-                .email("main@email.ru")
-                .name("main")
-                .build();
-        when(userService.get(1L)).thenReturn(user);
-        when(userTransfer.toUser(any(UserDto.class))).thenReturn(User.builder().name(user.getName()).email(user.getEmail()).build());
-        when(userTransfer.toDto(any(User.class))).thenReturn(userDtoResp);
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/{userId}", 1L))
-                .andExpect(status().isOk())
-                .andExpect(content().json(parser.writeValueAsString(userTransfer.toDto(user))));
+    void update() {
+        User user = userService.update(userWithId);
+        Assertions.assertNotNull(user);
+        verify(usersRepository, times(1)).save(userWithId);
     }
 
     @Test
-    void getAll() throws Exception {
-        when(userService.findAll()).thenReturn(Collections.emptyList());
-        when(userTransfer.toDto(any(User.class))).thenReturn(null);
-        mockMvc.perform(MockMvcRequestBuilders.get("/users"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+    void get() {
+        User user = userService.get(1L);
+        Assertions.assertNotNull(user);
+        verify(usersRepository, times(1)).getUserById(1L);
+    }
+
+    @Test
+    void delete() {
+        userService.delete(1L);
+        verify(usersRepository, times(1)).delete(userWithId);
+    }
+
+    @Test
+    void findAll() {
+        List<User> user = userService.findAll();
+        Assertions.assertNotNull(user);
+        verify(usersRepository, times(1)).findAll();
     }
 }
