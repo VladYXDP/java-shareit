@@ -114,7 +114,7 @@ public class ItemServiceImpl implements ItemService {
         List<Booking> booking = bookingRepository.findAllByBookerIdAndItem(userId, item);
         boolean check = booking.stream().anyMatch(it -> it.getStatus().equals(BookingStatus.APPROVED)
                 && it.getStartDate().isBefore(LocalDateTime.now()));
-        if (check) {
+        if (!check) {
             throw new CreateCommentException("Пользователь " + userId + " не пользовался предметом " + itemId);
         }
         comment.setItem(item);
