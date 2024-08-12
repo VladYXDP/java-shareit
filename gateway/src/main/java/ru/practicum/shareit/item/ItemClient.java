@@ -33,7 +33,7 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> update(ItemDto dto, Long userId) {
-        return patch("/" + dto.getId(), 1L, dto);
+        return patch("/" + dto.getId(), userId, dto);
     }
 
     public ResponseEntity<Object> addComment(CommentDto dto, Long userId, Long itemId) {
