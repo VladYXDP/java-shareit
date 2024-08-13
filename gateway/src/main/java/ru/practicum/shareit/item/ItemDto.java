@@ -7,7 +7,6 @@ import ru.practicum.shareit.comment.CommentDto;
 import ru.practicum.shareit.user.UserDto;
 
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter

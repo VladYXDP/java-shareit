@@ -11,7 +11,6 @@ import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.request.RequestService;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserServiceImpl;
-import ru.practicum.shareit.user.UsersRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
